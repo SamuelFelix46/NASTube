@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "NASTube",
+  "version": "0.2.0",
+  "description": "Envoie les vidéos YouTube vers ton NAS (backend NASTube).",
+  "permissions": ["storage", "activeTab", "scripting", "alarms", "cookies"],
+  "host_permissions": ["https://www.youtube.com/*", "https://*.youtube.com/*", "http://*/*", "https://*/*"],
+  "action": { "default_popup": "popup.html", "default_icon": "icon.png" },
+  "options_page": "options.html",
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": { "48": "icon.png", "128": "icon.png" }
+}

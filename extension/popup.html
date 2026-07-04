@@ -1,0 +1,96 @@
+<!doctype html><html><head><meta charset="utf-8"><title>NASTube</title>
+<style>
+*{box-sizing:border-box}
+body{font:14px system-ui;margin:0;padding:0;width:340px;background:#111;color:#eee;max-height:600px;overflow-y:auto}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:#333;border-radius:2px}
+.header{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid #222;position:sticky;top:0;background:#111;z-index:2}
+.header h1{font-size:15px;margin:0}
+.header h1 span{color:#c00}
+.section{padding:10px 14px;border-bottom:1px solid #1a1a1a}
+.section:last-child{border-bottom:0}
+.section-title{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:600}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:9px;border:0;border-radius:8px;font-weight:600;cursor:pointer;margin-top:6px;transition:all .15s;font-size:13px}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:#c00;color:#fff}
+.btn-primary:hover{background:#d00}
+.btn-primary:disabled{opacity:.4;cursor:default}
+.btn-secondary{background:#222;color:#ddd}
+.btn-secondary:hover{background:#333}
+.btn-sm{padding:5px 10px;font-size:11px;width:auto;margin:0}
+.btn-success{background:#0a7d29;color:#fff}
+.btn-success:hover{background:#0b8a2e}
+.btn-danger{background:#5a1a1a;color:#f88}
+.btn-danger:hover{background:#7a2222}
+.row{display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:#aaa}
+.row b{color:#fff}
+.bar{height:3px;background:#1a1a1a;border-radius:2px;margin:4px 0;overflow:hidden}
+.bar-fill{height:100%;background:#c00;border-radius:2px;transition:width .4s}
+.input{width:100%;padding:7px 10px;border-radius:6px;border:1px solid #333;background:#1a1a1a;color:#eee;font-size:12px;outline:none;margin-top:4px}
+.input:focus{border-color:#c00}
+.input-group{display:flex;gap:6px;align-items:center;margin-top:4px}
+.input-group .input{flex:1;margin-top:0}
+label{display:block;font-size:11px;color:#888;margin-top:8px}
+label:first-child{margin-top:0}
+.status{font-size:11px;min-height:18px;margin-top:4px;text-align:center}
+.user-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;border:1px solid #333;background:#1a1a1a;transition:background .15s;margin:2px}
+.user-chip:hover{background:#2a2a2a}
+.user-grid{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:4px}
+.tag-green{background:#0a2a0a;color:#6c6}
+.tag-red{background:#2a0a0a;color:#c66}
+.tag-gray{background:#1a1a1a;color:#888}
+.toggle{display:flex;align-items:center;gap:8px;margin-top:6px}
+.toggle input{width:16px;height:16px;accent-color:#c00;cursor:pointer;margin:0}
+.toggle label{font-size:12px;color:#aaa;cursor:pointer;margin:0}
+</style></head><body>
+<div class="header">
+  <span style="width:24px;height:24px;border-radius:6px;background:#c00;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:bold;font-size:14px">▶</span>
+  <h1><span>NAS</span>Tube</h1>
+  <div style="flex:1"></div>
+  <button id="refreshBtn" class="btn btn-sm btn-secondary" title="Refresh">🔄</button>
+</div>
+
+<div id="userSection" class="section">
+  <div class="section-title">👤 Compte</div>
+  <div id="userDisplay"></div>
+  <div id="userGrid" class="user-grid"></div>
+  <div id="loginForm" style="display:none;margin-top:6px">
+    <input id="loginInput" class="input" placeholder="Email ou nom d'utilisateur">
+    <input id="pwdInput" class="input" type="password" placeholder="Mot de passe">
+    <div style="display:flex;gap:6px;margin-top:6px">
+      <button id="loginBtn" class="btn btn-success btn-sm" style="flex:1">Se connecter</button>
+      <button id="cancelLoginBtn" class="btn btn-secondary btn-sm">Annuler</button>
+    </div>
+    <div id="loginStatus" class="status"></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">⬇️ Actions</div>
+  <button id="dlBtn" class="btn btn-primary" disabled>Télécharger cette vidéo</button>
+  <button id="scanBtn" class="btn btn-secondary" disabled>Scanner les recommandations</button>
+  <button id="cookiesBtn" class="btn btn-secondary" disabled>🍪 Sync cookies YouTube</button>
+</div>
+
+<div class="section">
+  <div class="section-title">📊 Statistiques</div>
+  <div id="stats"><small style="color:#888">Chargement…</small></div>
+</div>
+
+<div id="settingsSection" class="section">
+  <div class="section-title" style="cursor:pointer" id="settingsToggle">⚙️ Options <span id="settingsArrow" style="float:right">▶</span></div>
+  <div id="settingsBody" style="display:none;margin-top:6px">
+    <div class="toggle">
+      <input type="checkbox" id="autoScanCheck">
+      <label for="autoScanCheck">Auto-scan des recommandations</label>
+    </div>
+    <div style="font-size:11px;color:#666;margin-top:8px;padding:6px;background:#1a1a1a;border-radius:6px">
+      Serveur local détecté automatiquement<br>
+      Pas de configuration nécessaire
+    </div>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body></html>

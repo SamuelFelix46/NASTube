@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><title>NASTube — Options</title>
+<style>*{box-sizing:border-box}body{font:14px system-ui;max-width:520px;margin:30px auto;padding:20px;background:#111;color:#eee}
+label{display:block;margin:12px 0 4px;color:#aaa}
+input{width:100%;padding:8px;border-radius:6px;border:1px solid #333;background:#1a1a1a;color:#eee}
+button{margin-top:16px;padding:10px 16px;border:0;border-radius:6px;background:#c00;color:#fff;font-weight:600;cursor:pointer;transition:opacity .15s}
+button:hover{opacity:.9}
+button.alt{background:#333;margin-left:8px}
+button.alt:hover{background:#444}
+button.sm{padding:6px 12px;font-size:13px;margin-left:6px}
+.row{display:flex;gap:10px;align-items:center;margin-top:14px}
+small{color:#888}
+h1{font-size:18px;margin:0 0 4px}h1 span{color:#c00}
+p{margin:10px 0 0;min-height:1.5em}
+code{background:#222;padding:1px 4px;border-radius:3px;font-size:13px}
+hr{border:none;border-top:1px solid #333;margin:20px 0}
+</style></head><body>
+<h1><span>NAS</span>Tube — Options</h1>
+<p><small>Configure la connexion à ton backend NASTube.</small></p>
+
+<h2 style="font-size:15px;margin:16px 0 8px;color:#c00">🖥️ Serveur</h2>
+<label>URL du backend</label>
+<input id="backendUrl" placeholder="http://192.168.1.10:8765">
+<label>Jeton API (X-API-Token)</label>
+<input id="apiToken" type="password" placeholder="change-me">
+<div style="display:flex">
+  <button id="save">Enregistrer</button>
+  <button id="testConn" class="alt sm">Tester la connexion</button>
+</div>
+
+<hr>
+
+<h2 style="font-size:15px;margin:16px 0 8px;color:#c00">👤 Compte utilisateur</h2>
+<p style="font-size:13px;color:#888">Connecte-toi pour que l'extension utilise ton compte personnel.</p>
+<button id="loadUsersBtn" class="sm" style="background:#555;margin-top:0">Charger les comptes disponibles</button>
+<div id="userList" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+<label>Email ou nom d'utilisateur</label>
+<input id="userLogin" placeholder="email@exemple.fr">
+<label>Mot de passe</label>
+<input id="userPassword" type="password" placeholder="••••••••">
+<div style="display:flex">
+  <button id="userLoginBtn" style="background:#0a7d29">Se connecter</button>
+  <button id="userLogoutBtn" class="alt sm" style="display:none">Déconnexion</button>
+</div>
+<div id="userStatus" style="margin-top:8px;padding:8px;border-radius:6px;display:none"></div>
+
+<hr>
+
+<h2 style="font-size:15px;margin:16px 0 8px;color:#c00">⚙️ Préférences</h2>
+<div class="row"><input type="checkbox" id="autoScan" style="width:auto"><label for="autoScan" style="margin:0">Auto-scan des recommandations (1×/min)</label></div>
+
+<p id="status"><small>&nbsp;</small></p>
+<script src="options.js"></script>
+</body></html>

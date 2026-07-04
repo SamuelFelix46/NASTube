@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" id="meta-theme" content="#0f0f0f" />
+<title>NASTube</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23ef4444'/%3E%3Cpath d='M9 7v10l8-5z' fill='white'/%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: ['selector', '[data-theme="dark"]'],
+    theme: { extend: { colors: {
+      bg:      'var(--c-bg)',
+      bg2:     'var(--c-bg2)',
+      bg3:     'var(--c-bg3)',
+      line:    'var(--c-line)',
+      brand:   'var(--c-brand)',
+      brand2:  'var(--c-brand2)',
+      txt:     'var(--c-txt)',
+      mute:    'var(--c-mute)',
+    } } }
+  }
+</script>
+<style>
+  :root, [data-theme="dark"] {
+    --c-bg: #0f0f0f; --c-bg2: #181818; --c-bg3: #242424;
+    --c-line: #2f2f2f; --c-brand: #ef4444; --c-brand2: #dc2626;
+    --c-txt: #f1f1f1; --c-mute: #aaaaaa;
+  }
+  [data-theme="dark-blue"] {
+    --c-bg: #0a0e1a; --c-bg2: #111827; --c-bg3: #1e293b;
+    --c-line: #334155; --c-brand: #6366f1; --c-brand2: #4f46e5;
+    --c-txt: #f1f5f9; --c-mute: #94a3b8;
+  }
+  [data-theme="light"] {
+    --c-bg: #ffffff; --c-bg2: #f3f4f6; --c-bg3: #e5e7eb;
+    --c-line: #d1d5db; --c-brand: #ef4444; --c-brand2: #dc2626;
+    --c-txt: #111827; --c-mute: #6b7280;
+  }
+  [data-theme="dark-green"] {
+    --c-bg: #0a140e; --c-bg2: #0f1f14; --c-bg3: #1a3324;
+    --c-line: #2d4a37; --c-brand: #22c55e; --c-brand2: #16a34a;
+    --c-txt: #f0fdf4; --c-mute: #86efac;
+  }
+  html,body,#app { height:100%; }
+  body { background:var(--c-bg); color:var(--c-txt); font-family: Inter, system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 14px; line-height: 1.5; }
+  svg { flex-shrink: 0; overflow: visible; }
+  img { max-width: 100%; height: auto; }
+  ::-webkit-scrollbar { width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb { background:var(--c-line); border-radius:4px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--c-mute); }
+  ::-webkit-scrollbar-track { background:transparent; }
+  .clamp2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .clamp1 { display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
+  .line-clamp-3 { display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  /* Lecteur vidéo custom */
+  .vp-root { position:relative; background:#000; border-radius:12px; overflow:hidden; user-select:none; }
+  .vp-root video { display:block; width:100%; height:100%; object-fit:contain; background:#000; }
+  .vp-root:fullscreen { border-radius:0; }
+  .vp-root:fullscreen video { object-fit:contain; }
+  .vp-controls { transition:opacity .25s ease, transform .25s ease; }
+  .vp-root.vp-idle .vp-controls { opacity:0; pointer-events:none; }
+  .vp-root.vp-idle .vp-center-play { opacity:0; pointer-events:none; }
+  .vp-progress::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:var(--c-brand); cursor:pointer; box-shadow:0 0 6px rgba(0,0,0,.4); }
+  .vp-progress::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:var(--c-brand); cursor:pointer; border:none; }
+  .vp-vol::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:#fff; cursor:pointer; }
+  .vp-vol::-moz-range-thumb { width:12px; height:12px; border-radius:50%; background:#fff; cursor:pointer; border:none; }
+  @keyframes vp-spin { to { transform:rotate(360deg); } }
+  .vp-spinner { animation:vp-spin .8s linear infinite; }
+  @keyframes vp-flash { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .vp-flash { animation:vp-flash .35s ease; }
+  @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+  .animate-shimmer { background:linear-gradient(90deg,var(--c-bg2) 25%,var(--c-bg3) 50%,var(--c-bg2) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; }
+  @keyframes slide-in { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
+  .animate-slide-in { animation:slide-in .3s ease-out; }
+  @keyframes slide-left { from{transform:translateX(-100%)} to{transform:translateX(0)} }
+  .animate-slide-left { animation:slide-left .25s ease-out; }
+  @keyframes fade-in { from{opacity:0} to{opacity:1} }
+  .animate-fade-in { animation:fade-in .2s ease-out; }
+  @keyframes scale-in { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+  .animate-scale-in { animation:scale-in .2s ease-out; }
+  *:focus-visible { outline:2px solid var(--c-brand); outline-offset:2px; border-radius:4px; }
+  ::selection { background:var(--c-brand); color:white; }
+  /* Fallbacks pour les inputs (évitent le blanc si Tailwind CDN rate) */
+  input, textarea, select, button { background:var(--c-bg2); color:var(--c-txt); border-color:var(--c-line); }
+  input:focus, textarea:focus { border-color:var(--c-brand); outline:none; }
+  #app { background:var(--c-bg); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="importmap">
+{ "imports": {
+  "react": "https://esm.sh/react@18.3.1?dev",
+  "react-dom/client": "https://esm.sh/react-dom@18.3.1/client?dev"
+}}
+</script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

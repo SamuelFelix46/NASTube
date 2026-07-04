@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NASTube — Guide d'installation</title>
+<style>
+:root{--bg:#08080a;--card:#0f0f13;--border:#1e1e28;--text:#d0d0d8;--muted:#686878;--accent:#e01414;--accent-hover:#ff1a1a;--green:#0d9e3a;--yellow:#e8a020;--blue:#2a7de1}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+/* top bar */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:52px;background:rgba(8,8,10,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.topbar-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;color:#fff;text-decoration:none}
+.topbar-logo span{color:var(--accent)}
+.topbar-langs{display:flex;gap:2px;background:var(--card);border-radius:8px;padding:2px;border:1px solid var(--border)}
+.lang-btn{background:none;border:0;color:var(--muted);padding:5px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s}
+.lang-btn:hover{color:#fff}
+.lang-btn.active{background:var(--accent);color:#fff}
+/* hero */
+.hero{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 24px 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 40%,rgba(224,20,20,.06),transparent 50%),radial-gradient(circle at 70% 60%,rgba(224,20,20,.04),transparent 50%);pointer-events:none}
+.hero-icon{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--accent),#600);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;margin-bottom:20px;box-shadow:0 8px 40px rgba(224,20,20,.25);position:relative}
+.hero h1{font-size:clamp(36px,6vw,64px);font-weight:800;letter-spacing:-1.5px;color:#fff;position:relative}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:550px;margin:12px auto 0;position:relative}
+.hero-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;justify-content:center;position:relative}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;transition:all .2s;cursor:pointer;border:0}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 4px 20px rgba(224,20,20,.3)}
+.btn-primary:hover{background:var(--accent-hover);transform:translateY(-2px);box-shadow:0 6px 30px rgba(224,20,20,.4)}
+.btn-outline{background:transparent;color:#fff;border:1px solid var(--border)}
+.btn-outline:hover{background:var(--card);border-color:var(--muted)}
+.scroll-indicator{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:var(--muted);font-size:22px;animation:bounce 2s infinite;opacity:.5}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+/* container */
+.container{max-width:820px;margin:0 auto;padding:0 24px 80px}
+/* section titles */
+.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+/* step card */
+.step{margin-bottom:28px;position:relative}
+.step-num{position:absolute;top:28px;left:-16px;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#600);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;box-shadow:0 4px 16px rgba(224,20,20,.25);z-index:2}
+@media(max-width:720px){.step-num{left:50%;top:-16px;transform:translateX(-50%)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-left:12px;position:relative}
+@media(max-width:720px){.card{margin-left:0;padding:28px 20px;margin-top:16px}}
+.card h2{font-size:19px;font-weight:700;color:#fff;margin-bottom:4px}
+.card .sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+.card h3{font-size:14px;font-weight:600;color:#ccc;margin:20px 0 8px;display:flex;align-items:center;gap:6px}
+.card p,.card li{font-size:14px;color:var(--text);margin-bottom:6px;line-height:1.7}
+.card ul,.card ol{padding-left:22px;margin-bottom:8px}
+.card li{margin-bottom:4px}
+.card a{color:var(--accent);text-decoration:none;font-weight:500}
+.card a:hover{text-decoration:underline}
+code{background:#18181e;padding:2px 8px;border-radius:5px;font-size:13px;color:#f0a0b0;font-family:'SF Mono','Fira Code','Cascadia Code',monospace}
+kbd{background:#18181e;border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:12px;font-family:inherit;color:#ccc}
+pre{background:#0a0a0e;padding:14px 18px;border-radius:10px;overflow-x:auto;font-size:13px;margin:12px 0;border:1px solid var(--border);color:#b0b0c0;font-family:'SF Mono','Fira Code','Cascadia Code',monospace}
+pre .kw{color:#f0a0b0}
+pre .str{color:#8cc}
+pre .cm{color:#555}
+.tag{display:inline-block;padding:2px 10px;border-radius:5px;font-size:11px;font-weight:600;margin-right:4px;line-height:1.6}
+.tag-py{background:#102a3a;color:#5af}
+.tag-browser{background:#2a1a0a;color:#fa5}
+.tag-win{background:#0a1a0a;color:#5c5}
+.tag-tip{background:var(--card);color:var(--muted);border:1px solid var(--border)}
+.info-box{background:#0f0f15;border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin:12px 0;display:flex;gap:12px;align-items:flex-start}
+.info-box .icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.info-box p{font-size:13px;color:var(--muted);margin:0}
+.warning-box{background:#1a1008;border:1px solid #3a2810;border-radius:10px;padding:16px 18px;margin:12px 0;display:flex;gap:12px;align-items:flex-start}
+.warning-box .icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.warning-box p{font-size:13px;color:#d0a050;margin:0}
+.success-box{background:#081a0a;border:1px solid #103a18;border-radius:10px;padding:16px 18px;margin:12px 0;display:flex;gap:12px;align-items:flex-start}
+.success-box .icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.success-box p{font-size:13px;color:#5c5;margin:0}
+/* terminal mock */
+.term{background:#050508;border-radius:10px;border:1px solid var(--border);overflow:hidden;margin:12px 0}
+.term-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:#0a0a0e;border-bottom:1px solid var(--border)}
+.term-dot{width:10px;height:10px;border-radius:50%}
+.term-dot.r{background:#ff5f56}
+.term-dot.y{background:#ffbd2e}
+.term-dot.g{background:#27c93f}
+.term-body{padding:14px 18px;font-family:'SF Mono','Fira Code','Cascadia Code',monospace;font-size:13px;line-height:1.8;color:#b0b0c0}
+.term-body .prompt{color:#5c5}
+.term-body .out{color:#888}
+/* storage grid */
+.storage-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}
+.storage-item{background:#0a0a0e;border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center;transition:.2s;cursor:default}
+.storage-item:hover{border-color:var(--muted)}
+.storage-item .letter{font-size:20px;font-weight:800;color:#fff}
+.storage-item .size{font-size:11px;color:var(--muted);margin-top:2px}
+.storage-item .bar-storage{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
+.storage-item .bar-fill{height:100%;background:var(--accent);border-radius:2px}
+/* flow diagram */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin:14px 0}
+.flow-item{background:#0a0a0e;border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.flow-item .emoji{font-size:24px;margin-bottom:4px}
+.flow-item .label{font-size:12px;color:var(--muted)}
+.flow-item .arrow{color:var(--muted);font-size:18px}
+/* quick links */
+.quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:14px 0}
+.quick-link{display:flex;align-items:center;gap:10px;background:#0a0a0e;border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-decoration:none;color:var(--text);transition:.2s}
+.quick-link:hover{border-color:var(--accent);background:#0f0f15;transform:translateY(-1px)}
+.quick-link .emoji{font-size:20px}
+.quick-link .ql-title{font-size:13px;font-weight:600;color:#fff}
+.quick-link .ql-desc{font-size:11px;color:var(--muted)}
+/* scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+/* lang visibility */
+.fr,.en{transition:opacity .15s}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="topbar-logo" href="#">▶ <span>NAS</span>Tube</a>
+  <div class="topbar-langs">
+    <button class="lang-btn active" data-lang="fr" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-icon">▶</div>
+  <h1><span>NAS</span>Tube</h1>
+  <p class="fr">Télécharge tes vidéos YouTube depuis ton navigateur, simplement.</p>
+  <p class="en" style="display:none">Download YouTube videos from your browser, the easy way.</p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="#steps" class="fr">Commencer l'installation</a>
+    <a class="btn btn-primary" href="#steps" class="en" style="display:none">Start installation</a>
+    <a class="btn btn-outline" href="http://localhost:8765" target="_blank">Ouvrir l'app</a>
+  </div>
+  <div class="scroll-indicator">⌄</div>
+</section>
+
+<div class="container" id="steps">
+
+<!-- STEP 1 -->
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="card">
+    <h2 class="fr">Prérequis</h2>
+    <h2 class="en" style="display:none">Prerequisites</h2>
+    <p class="sub fr">Ce dont tu as besoin avant de commencer</p>
+    <p class="sub en" style="display:none">What you need before starting</p>
+
+    <div class="quick-links">
+      <a class="quick-link" href="https://www.python.org/downloads/" target="_blank">
+        <span class="emoji">🐍</span>
+        <div><div class="ql-title">Python 3.9+</div><div class="ql-desc fr">Télécharger</div><div class="ql-desc en" style="display:none">Download</div></div>
+      </a>
+      <a class="quick-link" href="https://www.google.com/chrome/" target="_blank">
+        <span class="emoji">🌐</span>
+        <div><div class="ql-title">Chrome / Edge / Brave</div><div class="ql-desc fr">Navigateur Chromium</div><div class="ql-desc en" style="display:none">Chromium browser</div></div>
+      </a>
+      <a class="quick-link" href="#step2">
+        <span class="emoji">🧩</span>
+        <div><div class="ql-title">Extension Chrome</div><div class="ql-desc fr">À charger manuellement</div><div class="ql-desc en" style="display:none">Load unpacked</div></div>
+      </a>
+    </div>
+
+    <div class="info-box">
+      <span class="icon">💡</span>
+      <p class="fr"><strong>Tu as déjà Python ?</strong> Vérifie en ouvrant un terminal (cmd) et en tapant <code>python --version</code>. Si le numéro de version s'affiche (ex: <code>Python 3.12.0</code>), c'est bon.</p>
+      <p class="en" style="display:none"><strong>Already have Python?</strong> Open a terminal (cmd) and type <code>python --version</code>. If you see a version number (e.g. <code>Python 3.12.0</code>), you're all set.</p>
+    </div>
+
+    <div class="warning-box">
+      <span class="icon">⚠️</span>
+      <p class="fr">Lors de l'installation de Python, <strong>coche impérativement "Add Python to PATH"</strong>. Sinon <code>python</code> ne sera pas reconnu dans le terminal.</p>
+      <p class="en" style="display:none">When installing Python, <strong>make sure to check "Add Python to PATH"</strong>. Otherwise <code>python</code> won't be recognized in the terminal.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step" id="step2">
+  <div class="step-num">2</div>
+  <div class="card">
+    <h2 class="fr">Installer l'extension Chrome</h2>
+    <h2 class="en" style="display:none">Load the Chrome extension</h2>
+    <p class="sub fr">Ajoute NASTube à ton navigateur</p>
+    <p class="sub en" style="display:none">Add NASTube to your browser</p>
+
+    <p class="fr">L'extension permet d'envoyer des vidéos YouTube vers le serveur en un clic et de synchroniser tes cookies.</p>
+    <p class="en" style="display:none">The extension lets you send YouTube videos to the server in one click and sync your cookies.</p>
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+        <span style="margin-left:10px;font-size:12px;color:#555;font-family:inherit">chrome://extensions</span>
+      </div>
+      <div class="term-body">
+        <div>1. Ouvre <span style="color:#5af">chrome://extensions</span> dans Chrome</div>
+        <div>2. Active <span style="color:#5c5">☰ Mode développeur</span> (coin haut-droit)</div>
+        <div>3. Clique <span style="color:#fa5">📂 Charger l'extension non empaquetée</span></div>
+        <div>4. Sélectionne le dossier <span style="color:#f0a">extension/</span> du projet</div>
+        <div class="out" style="margin-top:6px">✅ L'icône ▶ NASTube apparaît dans la barre d'extension</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <span class="icon">📌</span>
+      <p class="fr">Épingle l'extension dans la barre pour y accéder facilement : clique sur l'icône 🧩 puzzle → ▶ NASTube → 📌.</p>
+      <p class="en" style="display:none">Pin the extension to your toolbar: click the 🧩 puzzle icon → ▶ NASTube → 📌.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="card">
+    <h2 class="fr">Lancer le serveur</h2>
+    <h2 class="en" style="display:none">Start the server</h2>
+    <p class="sub fr">Double-clique sur <code>install.bat</code> et tout se fait tout seul</p>
+    <p class="sub en" style="display:none">Double-click <code>install.bat</code> and everything is handled automatically</p>
+
+    <p class="fr">Le fichier <strong>install.bat</strong> se trouve à la racine du dossier <code>NASTube/</code>. Double-clique dessus.</p>
+    <p class="en" style="display:none">The <strong>install.bat</strong> file is at the root of the <code>NASTube/</code> folder. Double-click it.</p>
+
+    <div class="term">
+      <div class="term-bar">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+        <span style="margin-left:10px;font-size:12px;color:#555;font-family:inherit">NASTube — Installation</span>
+      </div>
+      <div class="term-body">
+        <div><span class="prompt">$</span> <span style="color:#5af">python -m venv .venv</span></div>
+        <div class="out">✓ Création de l'environnement virtuel</div>
+        <div><span class="prompt">$</span> <span style="color:#5af">pip install -r requirements.txt</span></div>
+        <div class="out">✓ Installation des dépendances (yt-dlp, FastAPI...)</div>
+        <div><span class="prompt">$</span> <span style="color:#5af">python backend/app.py</span></div>
+        <div class="out">✓ Serveur démarré sur http://localhost:8765</div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-item"><div class="emoji">📦</div><div class="label fr">Venv + dépendances</div><div class="label en" style="display:none">Venv + dependencies</div></div>
+      <div class="flow-item"><div class="emoji">⚙️</div><div class="label fr">Config auto (jeton API)</div><div class="label en" style="display:none">Auto config (API token)</div></div>
+      <div class="flow-item"><div class="emoji">🚀</div><div class="label fr">Serveur sur :8765</div><div class="label en" style="display:none">Server on :8765</div></div>
+      <div class="flow-item"><div class="emoji">🌐</div><div class="label fr">Navigateur s'ouvre</div><div class="label en" style="display:none">Browser opens</div></div>
+    </div>
+
+    <div class="info-box">
+      <span class="icon">💡</span>
+      <p class="fr"><strong>Premier lancement uniquement :</strong> l'installation des dépendances prend 30-60 secondes. Les fois suivantes, le serveur démarre immédiatement.</p>
+      <p class="en" style="display:none"><strong>First run only:</strong> dependency installation takes 30-60 seconds. After that, the server starts immediately.</p>
+    </div>
+
+    <div class="warning-box">
+      <span class="icon">🔒</span>
+      <p class="fr">Laisse la fenêtre PowerShell ouverte. Si tu la fermes, le serveur s'arrête. Pour arrêter proprement : <kbd>Ctrl+C</kbd> dans la fenêtre.</p>
+      <p class="en" style="display:none">Keep the PowerShell window open. Closing it stops the server. To stop properly: press <kbd>Ctrl+C</kbd> in the window.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="card">
+    <h2 class="fr">Créer un compte &amp; choisir le disque</h2>
+    <h2 class="en" style="display:none">Create an account &amp; choose storage</h2>
+    <p class="sub fr">Première visite de l'interface web</p>
+    <p class="sub en" style="display:none">First visit to the web interface</p>
+
+    <p class="fr">Quand tu ouvres <a href="http://localhost:8765" target="_blank">http://localhost:8765</a> pour la première fois, un assistant de configuration s'affiche.</p>
+    <p class="en" style="display:none">When you open <a href="http://localhost:8765" target="_blank">http://localhost:8765</a> for the first time, a setup wizard appears.</p>
+
+    <h3>📂 <span class="fr">Choisir le disque de stockage</span><span class="en" style="display:none">Choose the storage disk</span></h3>
+    <p class="fr">Les vidéos téléchargées sont stockées sur ton disque dur. Le setup détecte automatiquement tous les disques disponibles :</p>
+    <p class="en" style="display:none">Downloaded videos are stored on your hard drive. The setup automatically detects all available drives:</p>
+
+    <div class="storage-grid">
+      <div class="storage-item">
+        <div class="letter">C:</div>
+        <div class="size">120 Go libres / 256 Go</div>
+        <div class="bar-storage"><div class="bar-fill" style="width:53%"></div></div>
+      </div>
+      <div class="storage-item">
+        <div class="letter">D:</div>
+        <div class="size">850 Go libres / 1 To</div>
+        <div class="bar-storage"><div class="bar-fill" style="width:15%"></div></div>
+      </div>
+      <div class="storage-item" style="border-color:var(--accent);background:#0f0a0a">
+        <div class="letter" style="color:var(--accent)">E:</div>
+        <div class="size">2.1 To libres / 4 To</div>
+        <div class="bar-storage"><div class="bar-fill" style="width:47%"></div></div>
+      </div>
+    </div>
+
+    <p class="fr">✅ <strong>Sélectionne le disque</strong> qui a le plus d'espace libre. L'assistant te montre la capacité et l'espace disponible de chaque disque.</p>
+    <p class="en" style="display:none">✅ <strong>Select the drive</strong> with the most free space. The wizard shows capacity and available space for each drive.</p>
+
+    <h3>👤 <span class="fr">Créer ton compte</span><span class="en" style="display:none">Create your account</span></h3>
+    <p class="fr">Ensuite, l'assistant te demande de créer un compte :</p>
+    <ul class="fr">
+      <li><strong>Nom d'utilisateur</strong> — le pseudo qui sera affiché dans l'app</li>
+      <li><strong>Email</strong> — pour identifier ton compte (optionnel, sert aussi d'identifiant de connexion)</li>
+      <li><strong>Mot de passe</strong> — choisis un mot de passe sécurisé</li>
+    </ul>
+    <p class="en" style="display:none">Then the wizard asks you to create an account:</p>
+    <ul class="en" style="display:none">
+      <li><strong>Username</strong> — your display name in the app</li>
+      <li><strong>Email</strong> — identifies your account (optional, also used as login)</li>
+      <li><strong>Password</strong> — choose a secure password</li>
+    </ul>
+
+    <div class="success-box">
+      <span class="icon">✅</span>
+      <p class="fr">Une fois le compte créé, tu es automatiquement connecté. Tu peux maintenant utiliser l'extension et télécharger des vidéos.</p>
+      <p class="en" style="display:none">Once the account is created, you're automatically logged in. You can now use the extension and download videos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step">
+  <div class="step-num">5</div>
+  <div class="card">
+    <h2 class="fr">Synchroniser les cookies YouTube</h2>
+    <h2 class="en" style="display:none">Sync YouTube cookies</h2>
+    <p class="sub fr">Nécessaire pour télécharger des vidéos</p>
+    <p class="sub en" style="display:none">Required to download videos</p>
+
+    <p class="fr">YouTube bloque les téléchargements si tu n'es pas connecté. Le serveur a besoin de tes cookies YouTube.</p>
+    <p class="en" style="display:none">YouTube blocks downloads if you're not signed in. The server needs your YouTube cookies.</p>
+
+    <div class="flow">
+      <div class="flow-item"><div class="emoji">🌐</div><div class="label fr">Connecté à YouTube</div><div class="label en" style="display:none">Signed in to YouTube</div></div>
+      <div class="flow-item"><div class="emoji">🧩</div><div class="label fr">Extension NASTube</div><div class="label en" style="display:none">NASTube extension</div></div>
+      <div class="flow-item"><div class="emoji">🍪</div><div class="label fr">Sync cookies</div><div class="label en" style="display:none">Sync cookies</div></div>
+      <div class="flow-item"><div class="emoji">📥</div><div class="label fr">Téléchargement OK</div><div class="label en" style="display:none">Download ready</div></div>
+    </div>
+
+    <ol class="fr">
+      <li>Va sur <a href="https://www.youtube.com" target="_blank">YouTube.com</a> et <strong>connecte-toi</strong> à ton compte Google</li>
+      <li>Clique sur l'icône ▶ <strong>NASTube</strong> dans la barre d'extension Chrome</li>
+      <li>Dans le popup, clique sur <strong>"🍪 Sync cookies YouTube"</strong></li>
+      <li>Vérifie le message de confirmation : <strong>"Cookies YouTube synchronisés ✓"</strong></li>
+    </ol>
+    <ol class="en" style="display:none">
+      <li>Go to <a href="https://www.youtube.com" target="_blank">YouTube.com</a> and <strong>sign in</strong> to your Google account</li>
+      <li>Click the ▶ <strong>NASTube</strong> icon in the Chrome extension bar</li>
+      <li>In the popup, click <strong>"🍪 Sync YouTube cookies"</strong></li>
+      <li>Check for the confirmation: <strong>"YouTube cookies synced ✓"</strong></li>
+    </ol>
+
+    <div class="info-box">
+      <span class="icon">🔄</span>
+      <p class="fr">Les cookies YouTube expirent après quelques jours ou semaines. Si les téléchargements échouent, re-synchronise les cookies (étape 5).</p>
+      <p class="en" style="display:none">YouTube cookies expire after a few days or weeks. If downloads fail, just sync cookies again (step 5).</p>
+    </div>
+
+    <div class="warning-box">
+      <span class="icon">⚠️</span>
+      <p class="fr">Tu dois être <strong>connecté à YouTube</strong> dans le même navigateur pour que la synchronisation fonctionne. Si tu es en navigation privée, les cookies ne sont pas accessibles.</p>
+      <p class="en" style="display:none">You must be <strong>signed in to YouTube</strong> in the same browser for syncing to work. Incognito/private browsing cookies are not accessible.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 6 -->
+<div class="step">
+  <div class="step-num">6</div>
+  <div class="card">
+    <h2 class="fr">Télécharger des vidéos</h2>
+    <h2 class="en" style="display:none">Download videos</h2>
+    <p class="sub fr">C'est parti !</p>
+    <p class="sub en" style="display:none">Let's go!</p>
+
+    <h3>🧩 <span class="fr">Depuis l'extension (popup)</span><span class="en" style="display:none">From the extension (popup)</span></h3>
+    <p class="fr">Clique sur l'icône NASTube dans la barre d'extension :</p>
+    <ul class="fr">
+      <li><strong>"Télécharger cette vidéo"</strong> → ajoute la vidéo YouTube ouverte dans ton onglet actif</li>
+      <li><strong>"Scanner les recommandations"</strong> → scanne et ajoute toutes les vidéos recommandées de la page</li>
+      <li>Les vidéos sont ajoutées à la <strong>file d'attente</strong> et téléchargées automatiquement</li>
+    </ul>
+    <p class="en" style="display:none">Click the NASTube icon in the extension bar:</p>
+    <ul class="en" style="display:none">
+      <li><strong>"Download this video"</strong> → adds the current YouTube video to the queue</li>
+      <li><strong>"Scan recommendations"</strong> → scans and adds all recommended videos from the page</li>
+      <li>Videos are added to the <strong>download queue</strong> and downloaded automatically</li>
+    </ul>
+
+    <h3>🌐 <span class="fr">Depuis l'interface web</span><span class="en" style="display:none">From the web interface</span></h3>
+    <ul class="fr">
+      <li><strong>Collection</strong> — toutes tes vidéos téléchargées, avec barre de progression</li>
+      <li><strong>File d'attente</strong> — ce qui est en cours ou en attente</li>
+      <li><strong>Recherche</strong> — filtre par titre ou statut</li>
+      <li><strong>Lecture</strong> — clique sur une vidéo pour la regarder directement</li>
+    </ul>
+    <ul class="en" style="display:none">
+      <li><strong>Library</strong> — all your downloaded videos with progress bars</li>
+      <li><strong>Queue</strong> — currently downloading or pending</li>
+      <li><strong>Search</strong> — filter by title or status</li>
+      <li><strong>Playback</strong> — click a video to watch it directly</li>
+    </ul>
+
+    <div class="success-box">
+      <span class="icon">🎉</span>
+      <p class="fr"><strong>Félicitations !</strong> Tu es prêt à utiliser NASTube. Télécharge tes premières vidéos et profite de ta bibliothèque locale.</p>
+      <p class="en" style="display:none"><strong>Congratulations!</strong> You're ready to use NASTube. Start downloading videos and enjoy your local library.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TROUBLESHOOTING -->
+<div class="step">
+  <div class="step-num" style="background:linear-gradient(135deg,var(--yellow),#803)">⚡</div>
+  <div class="card" style="border-color:#2a1a00">
+    <h2 class="fr">Dépannage</h2>
+    <h2 class="en" style="display:none">Troubleshooting</h2>
+    <p class="sub fr">Les problèmes les plus courants et leurs solutions</p>
+    <p class="sub en" style="display:none">Common issues and their solutions</p>
+
+    <h3>🐍 <span class="fr">Python n'est pas reconnu</span><span class="en" style="display:none">Python is not recognized</span></h3>
+    <p class="fr">Ouvre un terminal (cmd) et tape <code>python --version</code>. Si "n'est pas reconnu" s'affiche, réinstalle Python et <strong>coche "Add Python to PATH"</strong>.</p>
+    <p class="en" style="display:none">Open a terminal (cmd) and type <code>python --version</code>. If "not recognized" appears, reinstall Python and <strong>check "Add Python to PATH"</strong>.</p>
+
+    <h3>🍪 <span class="fr">Les cookies ne fonctionnent pas</span><span class="en" style="display:none">Cookies don't work</span></h3>
+    <p class="fr">Assure-toi d'être connecté à YouTube dans le navigateur. Ouvre <a href="https://www.youtube.com" target="_blank">YouTube.com</a>, vérifie que ton avatar apparaît en haut à droite, puis clique sur Sync cookies dans l'extension.</p>
+    <p class="en" style="display:none">Make sure you're signed in to YouTube. Open <a href="https://www.youtube.com" target="_blank">YouTube.com</a>, check that your avatar appears top-right, then click Sync cookies in the extension.</p>
+
+    <h3>🔌 <span class="fr">Le port 8765 est déjà utilisé</span><span class="en" style="display:none">Port 8765 is already in use</span></h3>
+    <p class="fr">Un autre programme utilise le port. Tu peux :</p>
+    <ul class="fr">
+      <li>Lancer <code>python reset.py</code> pour tuer tous les processus et réinitialiser</li>
+      <li>Changer le port dans <code>backend/.env</code> (variable <code>NASTUBE_PORT</code>)</li>
+    </ul>
+    <p class="en" style="display:none">Another program is using the port. You can:</p>
+    <ul class="en" style="display:none">
+      <li>Run <code>python reset.py</code> to kill all processes and reset</li>
+      <li>Change the port in <code>backend/.env</code> (variable <code>NASTUBE_PORT</code>)</li>
+    </ul>
+
+    <h3>📥 <span class="fr">Les téléchargements échouent</span><span class="en" style="display:none">Downloads are failing</span></h3>
+    <p class="fr">Causes possibles :</p>
+    <ul class="fr">
+      <li><strong>Cookies expirés</strong> → re-synchronise (étape 5)</li>
+      <li><strong>YouTube a changé</strong> → mets à jour yt-dlp : <code>.venv\Scripts\pip install -U yt-dlp</code></li>
+      <li><strong>Plus d'espace disque</strong> → libère de l'espace ou change le disque de stockage</li>
+    </ul>
+    <p class="en" style="display:none">Possible causes:</p>
+    <ul class="en" style="display:none">
+      <li><strong>Expired cookies</strong> → re-sync (step 5)</li>
+      <li><strong>YouTube changed</strong> → update yt-dlp: <code>.venv\Scripts\pip install -U yt-dlp</code></li>
+      <li><strong>Disk full</strong> → free up space or change storage drive</li>
+    </ul>
+
+    <h3>🧹 <span class="fr">Tout réinitialiser (reset)</span><span class="en" style="display:none">Reset everything</span></h3>
+    <p class="fr">Ouvre un terminal dans le dossier <code>NASTube/</code> et tape <code>python reset.py</code>. Cela supprime :</p>
+    <ul class="fr">
+      <li>Tous les processus liés à NASTube</li>
+      <li>Les vidéos et la base de données</li>
+      <li>L'environnement virtuel Python (.venv)</li>
+      <li>La configuration (.env), les scripts, les raccourcis</li>
+      <li>Les dossiers <code>backend/</code>, <code>extension/</code>, <code>frontend/</code> sont conservés</li>
+    </ul>
+    <p class="en" style="display:none">Open a terminal in the <code>NASTube/</code> folder and run <code>python reset.py</code>. This removes:</p>
+    <ul class="en" style="display:none">
+      <li>All NASTube-related processes</li>
+      <li>Videos and database</li>
+      <li>Python virtual environment (.venv)</li>
+      <li>Configuration (.env), scripts, shortcuts</li>
+      <li>The <code>backend/</code>, <code>extension/</code>, <code>frontend/</code> folders are kept</li>
+    </ul>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div class="card" style="text-align:center;border-color:var(--accent);margin-top:12px">
+  <p style="font-size:22px;font-weight:800;color:#fff;margin-bottom:4px" class="fr">🚀 Prêt à l'emploi</p>
+  <p style="font-size:22px;font-weight:800;color:#fff;margin-bottom:4px" class="en" style="display:none">🚀 Ready to go</p>
+  <p class="fr" style="color:var(--muted)">Double-clique sur <strong>install.bat</strong> et c'est parti !</p>
+  <p class="en" style="display:none;color:var(--muted)">Double-click <strong>install.bat</strong> and you're good to go!</p>
+  <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <a class="btn btn-primary" href="http://localhost:8765" target="_blank">Ouvrir NASTube</a>
+    <a class="btn btn-outline" href="https://www.youtube.com" target="_blank">YouTube</a>
+  </div>
+</div>
+
+</div>
+
+<footer style="text-align:center;padding:40px 24px;color:var(--muted);font-size:12px;border-top:1px solid var(--border)">
+  <p>NASTube · <a href="https://github.com/anomalyco/opencode" target="_blank" style="color:var(--muted)">Open source</a></p>
+</footer>
+
+<script>
+(function() {
+  // Language switcher
+  window.setLang = function(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    document.querySelectorAll('.fr, .en').forEach(function(el) {
+      el.style.display = el.classList.contains(lang) ? '' : 'none';
+    });
+    try { localStorage.setItem('nastube_lang', lang); } catch(e) {}
+  };
+  try {
+    var saved = localStorage.getItem('nastube_lang');
+    if (saved === 'en' || saved === 'fr') setLang(saved);
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>
